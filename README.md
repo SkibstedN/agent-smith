@@ -28,7 +28,7 @@ Illustration af ide:
 
 ```mermaid
 flowchart TD
-    subgraph White-hat hacker
+    subgraph White-hat hacker agent (smith)
     direction TB
     subgraph Open AI API
     G[GPT4]
