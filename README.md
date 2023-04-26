@@ -23,6 +23,7 @@ Gode udfordringer vi står overfor:
 - Skal vi gøre det i Python eller JS?
   - [LangChain JS vs. Python Integrations](https://langchain.com/integrations.html)
   - [LangChain JS vs. Python Features](https://langchain.com/features.html)
+- Hvordan skal vi lave search i allerede kendt materiale?
 
 Illustration af ide:
 
