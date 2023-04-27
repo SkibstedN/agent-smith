@@ -35,10 +35,12 @@ COPY ./requirements.txt ./
 
 RUN pip3 install -r requirements.txt
 
+RUN rm requirements.txt
+
 FROM setup-requirements AS run
 
 # Copy the files to the working directory in the container
 COPY ./app ./
 
 # Run main python script
-CMD ["python3", "./main.py"]
+ENTRYPOINT ["tail", "-f", "/dev/null"]
