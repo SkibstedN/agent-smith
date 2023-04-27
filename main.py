@@ -1,7 +1,15 @@
 import argparse
 import os
 from dotenv import load_dotenv
-load_dotenv()
+from langchain.agents import initialize_agent
+from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
+from bashtool import BashTool
+
+template = """Question: {question}
+
+Answer: """
+
 
 def init():
     # Init LLM
@@ -24,6 +32,12 @@ def main():
     print(args.port)
     print(args.knowledge)
     print(args.tools)
+
+    load_dotenv()
+    llm = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), temperature=1)
+    tools = [BashTool()]
+    agent = initialize_agent(tools, llm, agent='zero-shot-react-description', verbose=True)
+    agent.run(f"Target: {args.ip}, port: {args.port}, knowledge: {args.knowledge}, tools: {args.tools}")
 
     apikey = os.getenv("OPENAI_API_KEY")
 
