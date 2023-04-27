@@ -9,7 +9,7 @@ class BashTool(BaseTool):
         """Run commands and return final output."""
         # By default, the bash command will be executed in a new subprocess each time. 
         # To retain a persistent bash session, we can use the persistent=True arg.
-        bash = BashProcess() 
+        bash = BashProcess(strip_newlines=True) 
         return bash.run(command)
 
     async def _arun(self, command: str) -> str:
