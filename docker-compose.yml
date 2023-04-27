@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  kali:
+    build:
+      context: .
+      dockerfile: kali.dockerfile
+    volumes:
+      - /mnt/share-kali:/share
+  bwapp:
+    image: "raesene/bwapp"
+    ports:
+      - 8080:80
+
