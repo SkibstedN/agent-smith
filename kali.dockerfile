@@ -40,8 +40,8 @@ RUN rm requirements.txt
 
 FROM setup-requirements AS run
 
-# Copy the files to the working directory in the container
-COPY ./app ./
+# Copy environment file
+COPY ./.env ./
 
 # Source the environment variables from .env file
 RUN export $(grep -v '^#' .env | xargs)

@@ -5,10 +5,17 @@ services:
     build:
       context: .
       dockerfile: kali.dockerfile
+    command: |
+      "sleep 10"
+      "curl bwapp/install.php?install=yes"
+    depends_on:
+      - bwapp
     volumes:
       - /mnt/share-kali:/share
+      - ./app:/root/app
   bwapp:
     image: "raesene/bwapp"
-    ports:
-      - 8080:80
+    hostname: bwapp
+    expose:
+      - 80
 
