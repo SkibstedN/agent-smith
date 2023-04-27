@@ -19,6 +19,9 @@ RUN apt install \
     # Add necessary tools above
     -y --no-install-recommends
 
+# Install metasploit
+RUN curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall && ./msfinstall
+
 # Alias
 RUN echo "alias l='ls -al'" >> /root/.bashrc
 
