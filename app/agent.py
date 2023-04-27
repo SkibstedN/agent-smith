@@ -3,7 +3,7 @@ from typing import List, Union
 
 from dotenv import load_dotenv
 from langchain import LLMChain, WikipediaAPIWrapper
-from langchain.agents import LLMSingleActionAgent, AgentExecutor, AgentOutputParser, initialize_agent
+from langchain.agents import LLMSingleActionAgent, AgentExecutor, AgentOutputParser, initialize_agent, AgentType
 from langchain.agents import Tool
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import StringPromptTemplate
@@ -87,37 +87,12 @@ def runAgentTest():
     load_dotenv()
     llm = ChatOpenAI(temperature=0)
 
-    wikipediaWrapper = WikipediaAPIWrapper()
-    wikitool = Tool(name="Wikipedia", func=wikipediaWrapper.run,
-                    description="A wrapper around Wikipedia. Useful for when you need to answer general questions about people, places, companies, historical events, or other subjects. Input should be a search query.")
-    bash_tool = BashTool()
-
     tools = [BashTool()]
 
-    # agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+    agent_executor = initialize_agent(tools=tools, llm=llm, agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+                                      verbose=True, agent_kwargs={"prefix": prompt_prefix})
 
-    prompt = CustomPromptTemplate(
-        template=template,
-        tools=tools,
-        input_variables=["input", "intermediate_steps"]
-    )
-    output_parser = CustomOutputParser()
-
-    llm_chain = LLMChain(llm=llm, prompt=prompt)
-    tool_names = [tool.name for tool in tools]
-    agent = LLMSingleActionAgent(
-        llm_chain=llm_chain,
-        output_parser=output_parser,
-        stop=["\nObservation:"],
-        allowed_tools=tool_names
-    )
-
-    agent_executor = initialize_agent(tools=tools, llm=llm, agent=agent)
-
-    agent_executor = AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True)
-    agent_executor.run("Check for open ports on this website: https://python.langchain.com")
-    # agent.run("check for open ports on this website: https://python.langchain.com")
-
+    agent_executor.run("Do penetration testing and try to exploit found vulnerabilities on this website: 'bwapp' this is the complete hostname, there is no http:// or .com - the hostname is 'bwapp'")
 
 if __name__ == "__main__":
     runAgentTest()
