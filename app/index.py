@@ -6,7 +6,8 @@ from langchain.vectorstores import Chroma
 from dotenv import load_dotenv
 from langchain.document_loaders import DirectoryLoader, TextLoader
 
-class CveMemory:
+
+class CveIndex:
 
     def __init__(self):
         load_dotenv()
@@ -15,7 +16,7 @@ class CveMemory:
 
     def build_index(self):
         """
-        Builds CVE memory in vector store (Chromadb)
+        Builds CVE index in vector store (Chromadb)
         """
         load_dotenv()
 
