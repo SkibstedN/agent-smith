@@ -17,6 +17,8 @@ services:
   bwapp:
     image: "raesene/bwapp"
     hostname: bwapp.com
+    ports:
+      - 8080:80
     expose:
       - 80
 
