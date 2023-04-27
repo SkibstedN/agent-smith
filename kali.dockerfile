@@ -14,6 +14,7 @@ RUN apt install \
     nmap \
     python3 \
     python3-pip \
+    iputils-ping \
     # Add necessary tools above
     -y --no-install-recommends
 
@@ -41,6 +42,9 @@ FROM setup-requirements AS run
 
 # Copy the files to the working directory in the container
 COPY ./app ./
+
+# Source the environment variables from .env file
+RUN export $(grep -v '^#' .env | xargs)
 
 # Run main python script
 ENTRYPOINT ["tail", "-f", "/dev/null"]
