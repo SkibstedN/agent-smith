@@ -6,24 +6,26 @@ FROM kalilinux/kali-rolling AS build-image
 # Alias
 RUN echo "alias l='ls -al'" >> /root/.bashrc
 
+# Install base packages
+RUN apt -y update && apt -y upgrade && apt -y autoremove && apt clean
+RUN apt install curl python3 python3-pip -y --no-install-recommends
+
 # Set working directory to /root
 WORKDIR /root
 
 FROM build-image AS install-metasploit
 
-RUN apt -y update && apt -y upgrade && apt -y autoremove && apt clean
-RUN apt install curl -y --no-install-recommends
-
 # Install metasploit
 RUN curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall
 RUN chmod 755 msfinstall
 RUN ./msfinstall
+RUN rm msfinstall
 
 RUN export PATH=/bin:$PATH
 
 FROM install-metasploit AS install-packages
 
-# Apt
+# Install packages from file
 COPY ./packages.txt ./
 RUN xargs -a packages.txt apt install -y --no-install-recommends
 RUN rm packages.txt

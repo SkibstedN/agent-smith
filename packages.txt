@@ -1,11 +1,10 @@
 sqlmap
-curl
 wfuzz
 nmap
-python3
-python3-pip
 iputils-ping
 sudo
 nikto
 telnet
 default-mysql-client
+dirb
+aircrack-ng
