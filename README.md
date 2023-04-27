@@ -1,8 +1,10 @@
 # agent-smith
+
 Spawn endless swarms of GPT4 agents using LangChain to scan for vulnerabilities in your software!
 
 ## White-hat hacker agents styret af GPT4 (3.5)
-***Projekt idé (Originalt af Morten)***
+
+**_Projekt idé (Originalt af Morten)_**
 
 > Brug GPT4 til at automatisere en 'whitehacking' bot. GPT4 udvides til at kunne eksekvere pen-testing. Dvs. at vi bruger GPT4 API'et til at definere kommandoer som vi eksekverer i en terminal, og responset giver vi så til GPT4, som så giver en ny kommando osv. Vi kunne lade os inspirere af https://github.com/Significant-Gravitas/Auto-GPT. Det kunne også være en mulighed at bruge https://js.langchain.com/docs/.
 
@@ -15,7 +17,7 @@ Gode udfordringer vi står overfor:
 - (CLI tool) Hvordan skal værktæjet tage imod target (api url, website etc.) og goal (målet med undersøgelse/forsøg på sikekrhedsbrud)?
 - (Prompts) Hvilke forskellige prompts (pre-prompts) skal vi bruge?
   - Forskellige agents skal kunne forskellige ting (evt. samarbejde?). Det kunne f.eks. agents til hver af OWASPs top 10 Web Application Security Risks [OWAPS Top10](https://owasp.org/www-project-top-ten/)
-  - F.eks.  Broken Access Control, sql-injection, Misconfiguration, Vuln. and outdated components etc. Port Scanning..
+  - F.eks. Broken Access Control, sql-injection, Misconfiguration, Vuln. and outdated components etc. Port Scanning..
 - (Command Executor) Hvad gør vi med long-running commands (nmap uden specifik port)?
   - Kan vi køre commands sikkert uden af flå vores computer fra hinanden?
 - Skal skal prøve at bruge LangChains "Agent" til at spawne forskellige GPT agents der kan hjælpe hinanden eller samarbejde om et target. (Tænk: spawn 100 agents der pinger et api med forskellige tools)
@@ -41,7 +43,7 @@ flowchart TD
     E((Promts))
     E --> |3. Relevant Promt| B
     B --> |2. Goals A| E
-    F[CLI tool]   
+    F[CLI tool]
     F --> |1. Enter Goal and Target| B
     B --> |?. search| C[(Indexes:\nCVE register)]
     C --> |?. Known vuln.| B
@@ -55,4 +57,9 @@ flowchart TD
     end
 ```
 
+## BWAPP writeups
 
+https://wooly6bear.files.wordpress.com/2016/01/bwapp-tutorial.pdf
+
+
+## Preprompts
