@@ -11,7 +11,6 @@ services:
     depends_on:
       - bwapp
     volumes:
-      - /mnt/share-kali:/share
       - ./app:/root/app
       - ./cves:/root/cves
       - ./db:/root/db
