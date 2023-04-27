@@ -13,6 +13,7 @@ services:
     volumes:
       - /mnt/share-kali:/share
       - ./app:/root/app
+      - ./cves:/root/cves
   bwapp:
     image: "raesene/bwapp"
     hostname: bwapp
