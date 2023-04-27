@@ -1,14 +1,29 @@
 # Dockerfile kali
 
 # Official base image
-FROM parrotsec/tools-metasploit AS build-image
+FROM kalilinux/kali-rolling AS build-image
 
 # Apt
 RUN apt -y update && apt -y upgrade && apt -y autoremove && apt clean
-
+# Tools
 RUN apt install \
+    sqlmap \
+    curl \
+    wfuzz \
+    nmap \
+    python3 \
+    python3-pip \
+    iputils-ping \
     sudo \
+    # Add necessary tools above
     -y --no-install-recommends
+
+# Install metasploit
+RUN curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall
+RUN chmod 755 msfinstall
+RUN ./msfinstall
+
+RUN export PATH=/bin:$PATH
 
 # Alias
 RUN echo "alias l='ls -al'" >> /root/.bashrc
