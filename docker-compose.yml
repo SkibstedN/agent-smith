@@ -1,23 +1,23 @@
 version: '3'
 
 services:
-  kali:
+  hacker:
     build:
       context: .
-      dockerfile: kali.dockerfile
     command: |
-      "sleep 10"
+      "sleep 15"
       "curl bwapp/install.php?install=yes"
     depends_on:
       - bwapp
     volumes:
-      - /mnt/share-kali:/share
       - ./app:/root/app
       - ./cves:/root/cves
       - ./db:/root/db
   bwapp:
     image: "raesene/bwapp"
     hostname: bwapp.com
+    ports:
+      - 8080:80
     expose:
       - 80
 

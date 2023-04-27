@@ -6,14 +6,8 @@ FROM parrotsec/tools-metasploit AS build-image
 # Apt
 RUN apt -y update && apt -y upgrade && apt -y autoremove && apt clean
 
-RUN apt list --installed
-
-# Tools
 RUN apt install \
-    python3 \
-    python3-pip \
     sudo \
-    # Add necessary tools above
     -y --no-install-recommends
 
 # Alias
