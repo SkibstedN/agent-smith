@@ -13,7 +13,7 @@ class CveMemory:
         self.persist_directory = "../db"
         self.embeddings = OpenAIEmbeddings()
 
-    def build_memory(self):
+    def build_index(self):
         """
         Builds CVE memory in vector store (Chromadb)
         """
@@ -30,7 +30,7 @@ class CveMemory:
         vectordb = Chroma.from_documents(docs, self.embeddings, persist_directory=self.persist_directory)
         vectordb.persist()
 
-    def query_memory(self, query: str):
+    def query_index(self, query: str):
         """
         Du a similarity search in CVE memory vector store
         @param query: query str
