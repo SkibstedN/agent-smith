@@ -5,7 +5,7 @@ services:
     build:
       context: .
     command: |
-      "sleep 15"
+      "sleep 30"
       "curl bwapp/install.php?install=yes"
     depends_on:
       - bwapp
@@ -15,7 +15,6 @@ services:
       - ./db:/root/db
   bwapp:
     image: "raesene/bwapp"
-    hostname: bwapp.com
     ports:
       - 8080:80
     expose:
