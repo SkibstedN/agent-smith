@@ -2,6 +2,12 @@
 
 Spawn endless swarms of GPT4 agents using LangChain to scan for vulnerabilities in your software!
 
+## Getting started
+
+Run the following command at the project root to start the run environment:
+
+`docker compose up --build`
+
 ## White-hat hacker agents styret af GPT4 (3.5)
 
 **_Projekt idé (Originalt af Morten)_**
