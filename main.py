@@ -15,6 +15,16 @@ def init():
     # Init LLM
     pass
 
+def build_prompt(args) -> str:
+    start_prompt = f"Target: {args.ip}"
+    if args.port is not None:
+        output += f", Port: {args.port}"
+    if args.knowledge is not None:
+        output += f", Knowledge: {args.knowledge}"
+    if args.tools is not None:
+        output += f", Tools: {args.tools}"
+    
+    return start_prompt
 
 
 def main():
@@ -37,9 +47,9 @@ def main():
     llm = ChatOpenAI(openai_api_key=os.getenv("OPENAI_API_KEY"), temperature=1)
     tools = [BashTool()]
     agent = initialize_agent(tools, llm, agent='zero-shot-react-description', verbose=True)
-    agent.run(f"Target: {args.ip}, port: {args.port}, knowledge: {args.knowledge}, tools: {args.tools}")
-
-    apikey = os.getenv("OPENAI_API_KEY")
+    
+    prompt = build_prompt(args)
+    agent.run(prompt)
 
 
 if __name__ == "__main__":
