@@ -1,3 +1,4 @@
+import json
 import re
 from typing import List, Union
 
@@ -5,10 +6,12 @@ from dotenv import load_dotenv
 from langchain.agents import LLMSingleActionAgent, AgentExecutor, AgentOutputParser, initialize_agent, AgentType
 from langchain.agents import Tool
 from langchain.chat_models import ChatOpenAI
+from langchain.memory import ChatMessageHistory, ConversationBufferMemory
 from langchain.prompts import StringPromptTemplate
-from langchain.schema import AgentAction, AgentFinish
+from langchain.schema import AgentAction, AgentFinish, messages_to_dict
 
 from bashtool import BashTool
+from conversation_memory import get_conv_memory
 
 template = """Answer the following question as best you can, but you can only answer with bash commands.
 The end goal is to provide me with a command that I can execute in my terminal.
@@ -82,6 +85,31 @@ class CustomOutputParser(AgentOutputParser):
         return AgentAction(tool=action, tool_input=action_input.strip(" ").strip('"'), log=llm_output)
 
 
+# prompt_prefix = """
+# You must act as penetration tester who is allowed to test the security of the system.
+# Test different commands, and try to find vulnerabilities in the system.
+# Tools such as sqlmap often requires further interactions by writing "y", "n" in the terminal.
+# Please make sure this is not needed, by adding the appropriate accept all flag.
+# "ping" must be used with the following flags "-W 10 -c 3".
+# Do not stop before finding and exploiting any vulnerabilities.
+# On this site: https://owasp.org/www-project-top-ten/ there is a list of top 10 known exploits.
+# """
+
+prompt_prefix = """
+You must act as penetration tester who is allowed to test the security of the system. 
+Test different commands, and try to find vulnerabilities in the system.
+Tools such as sqlmap often requires further interactions by writing "y", "n" in the terminal. 
+Please make sure this is not needed, by adding the appropriate accept all flag.
+"ping" must be used with the following flags "-W 10 -c 3".
+
+Do not stop before finding at least 3 exploits.
+
+When executing bash scripts, you have access to the following commands: curl, ping, nmap, sqlmap, nikto
+"""
+
+# If any tool is not found, install it. If you can't install it, try another tool.
+
+
 def runAgentTest():
     load_dotenv()
     llm = ChatOpenAI(temperature=0)
@@ -91,7 +119,23 @@ def runAgentTest():
     agent_executor = initialize_agent(tools=tools, llm=llm, agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
                                       verbose=True, agent_kwargs={"prefix": prompt_prefix})
 
-    agent_executor.run("Do penetration testing and try to exploit found vulnerabilities on this website: 'bwapp' this is the complete hostname, there is no http:// or .com - the hostname is 'bwapp'")
+    # memory = get_conv_memory()
+
+    memory = ConversationBufferMemory()
+
+    agent_executor.memory = memory
+
+    prompt = """
+    Do penetration testing and try to find exploits on the following site: 'bwapp' this is the complete hostname, there is no http:// or .com - the hostname is 'bwapp'
+    You are only allowed to use the commands mentioned above.
+    """
+
+    agent_executor.run(prompt)
+
+    with open('memory.txt', 'w') as convert_file:
+        convert_file.write(memory.json())
+
+
 
 if __name__ == "__main__":
     runAgentTest()
