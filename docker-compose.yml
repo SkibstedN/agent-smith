@@ -17,7 +17,7 @@ services:
       - ./db:/root/db
   bwapp:
     image: "raesene/bwapp"
-    hostname: bwapp
+    hostname: bwapp.com
     expose:
       - 80
 
