@@ -15,6 +15,7 @@ RUN apt install \
     python3 \
     python3-pip \
     iputils-ping \
+    sudo \
     # Add necessary tools above
     -y --no-install-recommends
 
