@@ -13,9 +13,11 @@ services:
     volumes:
       - /mnt/share-kali:/share
       - ./app:/root/app
+      - ./cves:/root/cves
+      - ./db:/root/db
   bwapp:
     image: "raesene/bwapp"
-    hostname: bwapp
+    hostname: bwapp.com
     expose:
       - 80
 
