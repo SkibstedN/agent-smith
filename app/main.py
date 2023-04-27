@@ -16,7 +16,7 @@ def init():
     pass
 
 def build_prompt(args) -> str:
-    start_prompt = f"Target: {args.ip}"
+    output = f"Target: {args.ip}"
     if args.port is not None:
         output += f", Port: {args.port}"
     if args.knowledge is not None:
@@ -24,7 +24,7 @@ def build_prompt(args) -> str:
     if args.tools is not None:
         output += f", Tools: {args.tools}"
     
-    return start_prompt
+    return output
 
 
 def main():
@@ -48,8 +48,9 @@ def main():
     tools = [BashTool()]
     agent = initialize_agent(tools, llm, agent='zero-shot-react-description', verbose=True)
     
-    prompt = build_prompt(args)
-    agent.run(prompt)
+    preprompt = "You must act as cyber security specialist who is allowed to test the security of the given system. "
+    target_information = build_prompt(args)
+    agent.run(preprompt + target_information)
 
 
 if __name__ == "__main__":
