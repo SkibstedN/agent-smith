@@ -19,4 +19,10 @@ services:
       - 8080:80
     expose:
       - 80
+  badstore:
+    image: "jvhoof/badstore-docker"
+    ports:
+      - 8081:80
+    expose:
+      - 80
 
