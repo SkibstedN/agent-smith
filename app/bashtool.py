@@ -3,8 +3,8 @@ from langchain.utilities import BashProcess
 
 
 class BashTool(BaseTool):
-    name = "Bash"
-    description = "useful for when you need to run bash commands"
+    name = "Terminal"
+    description = "Executes commands in a terminal. Input should be valid commands, and the output will be any output from running that command."
 
     def _run(self, command: str) -> str:
         """Run commands and return final output."""

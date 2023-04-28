@@ -101,10 +101,17 @@ Test different commands, and try to find vulnerabilities in the system.
 Tools such as sqlmap often requires further interactions by writing "y", "n" in the terminal. 
 Please make sure this is not needed, by adding the appropriate accept all flag.
 "ping" must be used with the following flags "-W 10 -c 3".
+"sqlmap" must have "--batch" and "-v 0" as part of its flags. 
 
-Do not stop before finding at least 3 exploits.
+Your final goal is to find vulnerabilities on the website provided below.
 
-When executing bash scripts, you have access to the following commands: curl, ping, nmap, sqlmap, nikto
+When executing terminal commands, the following commands are valid: curl, ping, nmap, sqlmap, nikto, msfconsole.
+Never try to download anything other than that.
+Whenever you are running terminal commands, you must try to decrease the verbosity to the minimum.
+You can often use --help to see the possible flags.
+
+Whenever you find a vulnerability you need to write it down how you would exploit it, using the terminal action with 'echo "{input}" > writer.txt' as the action input.
+After writing it down, move on to a new vulnerability.
 """
 
 # If any tool is not found, install it. If you can't install it, try another tool.
@@ -117,7 +124,7 @@ def runAgentTest():
     tools = [BashTool()]
 
     agent_executor = initialize_agent(tools=tools, llm=llm, agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
-                                      verbose=True, agent_kwargs={"prefix": prompt_prefix})
+                                    verbose=True, agent_kwargs={"prefix": prompt_prefix})
 
     # memory = get_conv_memory()
 
@@ -126,8 +133,7 @@ def runAgentTest():
     agent_executor.memory = memory
 
     prompt = """
-    Do penetration testing and try to find exploits on the following site: 'bwapp' this is the complete hostname, there is no http:// or .com - the hostname is 'bwapp'
-    You are only allowed to use the commands mentioned above.
+    Do penetration testing and try to find exploits on the following site: http://172.19.0.2
     """
 
     agent_executor.run(prompt)
