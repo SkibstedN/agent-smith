@@ -101,9 +101,10 @@ Test different commands, and try to find vulnerabilities in the system.
 Tools such as sqlmap often requires further interactions by writing "y", "n" in the terminal. 
 Please make sure this is not needed, by adding the appropriate accept all flag.
 "ping" must be used with the following flags "-W 10 -c 3".
-"sqlmap" must have "--batch" and "-v 0" as part of its flags. 
+"sqlmap" must have "--batch" and "-v 0" as part of its flags.
+"msfconsole" must always .; exit' after command execution
 
-Your final goal is to find vulnerabilities on the website provided below.
+Your final goal is to exploit the vulnerabilities on the website provided below.
 
 When executing terminal commands, the following commands are valid: curl, ping, nmap, sqlmap, nikto, msfconsole.
 Never try to download anything other than that.
@@ -111,29 +112,29 @@ Whenever you are running terminal commands, you must try to decrease the verbosi
 You can often use --help to see the possible flags.
 
 Whenever you find a vulnerability you need to write it down how you would exploit it, using the terminal action with 'echo "{input}" > writer.txt' as the action input.
-After writing it down, move on to a new vulnerability.
+After writing it down, move on to a new vulnerability and start exploiting.
 """
+
 
 # If any tool is not found, install it. If you can't install it, try another tool.
 
 
-def runAgentTest():
+def run_general_agent(args, mem = None):
     load_dotenv()
-    llm = ChatOpenAI(temperature=0)
+    llm = ChatOpenAI(temperature=0, model_name="gpt-4")
 
     tools = [BashTool()]
 
     agent_executor = initialize_agent(tools=tools, llm=llm, agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
-                                    verbose=True, agent_kwargs={"prefix": prompt_prefix})
-
-    # memory = get_conv_memory()
+                                      verbose=True, agent_kwargs={"prefix": prompt_prefix})
 
     memory = ConversationBufferMemory()
 
-    agent_executor.memory = memory
+    agent_executor.memory = memory if mem is None else mem
 
-    prompt = """
-    Do penetration testing and try to find exploits on the following site: http://172.19.0.2
+    prompt = f"""
+    Do penetration testing and try to find exploits on the following site: {args.ip}
+    Knowledge: {args.knowledge}
     """
 
     agent_executor.run(prompt)
@@ -142,6 +143,5 @@ def runAgentTest():
         convert_file.write(memory.json())
 
 
-
 if __name__ == "__main__":
-    runAgentTest()
+    run_general_agent()

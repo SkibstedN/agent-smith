@@ -1,6 +1,6 @@
 import argparse
 
-from agent import runAgentTest
+from agent import run_general_agent
 from scanner_agent import run_scanner_agent
 
 
@@ -27,9 +27,10 @@ def main():
     args = parser.parse_args()
 
     if args.goal == "scan":
-        run_scanner_agent(args)
+        mem = run_scanner_agent(args)
+        run_general_agent(args, mem)
     else:
-        runAgentTest()
+        run_general_agent(args)
 
 
 if __name__ == "__main__":

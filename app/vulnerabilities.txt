@@ -1,0 +1,8 @@
+1. Missing X-Frame-Options header: This can be exploited by performing clickjacking attacks.
+2. Directory indexing: Sensitive information can be accessed by browsing the directories like /passwords/, /images/, /documents/, /apps/, /stylesheets/.
+3. Outdated Apache version: The server is running an outdated version of Apache, which may have known vulnerabilities.
+4. PHPSESSID cookie without httponly flag: This can be exploited by performing XSS attacks to steal the session cookie.
+5. phpinfo() function exposed: Sensitive information about the server can be accessed through /phpinfo.php and /admin/phpinfo.php.
+6. Unprotected admin login page: The /admin/ directory and /login.php page can be targeted for brute force attacks.
+7. Configuration file exposed: The /config.inc file contains usernames and passwords, which can be accessed by an attacker.
+8. Install.php file found: The presence of the install.php file can be exploited to reinstall the application or modify its settings.

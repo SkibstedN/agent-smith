@@ -36,7 +36,7 @@ You have access to nmap, nikto, ping etc. scanning tools from kali linux.
 
 def run_scanner_agent(args):
     load_dotenv()
-    llm = ChatOpenAI(temperature=0)
+    llm = ChatOpenAI(temperature=0, model_name="gpt-4")
 
     tools = [BashTool()]
     memory = ConversationBufferMemory()
@@ -63,3 +63,5 @@ def run_scanner_agent(args):
     with open('memory.txt', 'w') as convert_file:
         if memory:
             convert_file.write(json.dumps(memory.json()))
+
+    return memory
