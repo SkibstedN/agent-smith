@@ -17,8 +17,10 @@ services:
     image: "raesene/bwapp"
     ports:
       - 8080:80
+      - 3306:3306
     expose:
       - 80
+      - 3306
   badstore:
     image: "jvhoof/badstore-docker"
     ports:

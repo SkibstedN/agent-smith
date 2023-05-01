@@ -1,4 +1,1 @@
-Vulnerabilities found and how to exploit them:
-1. Sensitive directories are accessible through /robots.txt. Exploit: Access the sensitive directories like /admin/, /images/, /documents/, and /passwords/ directly.
-2. Directory indexing is enabled for several directories. Exploit: Access the directories like /images/, /documents/, /passwords/, /apps/, /db/, and /stylesheets/ to view their contents.
-3. The /config.inc file contains usernames and passwords. Exploit: Use the credentials found in the /config.inc file to access restricted areas of the website.
+Vulnerability: The /config.inc file contains sensitive information like usernames and passwords. Exploit: An attacker can use these credentials to gain unauthorized access to the system.
