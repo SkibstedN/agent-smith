@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
+hf = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 from langchain.memory import VectorStoreRetrieverMemory
 from langchain.vectorstores import Chroma
 
@@ -9,6 +10,4 @@ def get_conv_memory(self):
     Builds conversation memory in vector store (Chromadb)
     """
     load_dotenv()
-    store = Chroma.from_documents([], OpenAIEmbeddings(), persist_directory="../conv-db")
-    retriever = store.as_retriever(search_kwargs=dict(k=1))
-    return VectorStoreRetrieverMemory(retriever=retriever)
+    store = Chroma.from_documents([], hf, persist_directory="../conv-db")

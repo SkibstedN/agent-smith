@@ -1,6 +1,6 @@
 import os
 
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma
 from dotenv import load_dotenv
@@ -12,7 +12,7 @@ class CveIndex:
     def __init__(self):
         load_dotenv()
         self.persist_directory = "../db"
-        self.embeddings = OpenAIEmbeddings()
+        self.embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
     def build_index(self):
         """

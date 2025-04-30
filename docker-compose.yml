@@ -1,30 +1,24 @@
-version: '3'
-
 services:
-  kali:
+  ollama:
+    image: ollama/ollama:0.1.34
+    volumes: [ "ollama-models:/root/.ollama" ]
+    ports: [ "11434:11434" ]
+
+  agent-smith:
     build:
       context: .
-    command: |
-      "sleep 30"
-      "curl bwapp/install.php?install=yes"
-    depends_on:
-      - bwapp
+      dockerfile: Dockerfile
+    depends_on: [ ollama ]
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL=llama3
     volumes:
-      - ./app:/root/app
-      - ./cves:/root/cves
-      - ./db:/root/db
-  bwapp:
-    image: "raesene/bwapp"
-    ports:
-      - 8080:80
-      - 3306:3306
-    expose:
-      - 80
-      - 3306
-  badstore:
-    image: "jvhoof/badstore-docker"
-    ports:
-      - 8081:80
-    expose:
-      - 80
+      - ./logs:/logs
+    ports: [ "8000:8000" ]
 
+  bwapp:
+    image: raesene/bwapp
+    ports: [ "8080:80", "3306:3306" ]
+
+volumes:
+  ollama-models:
