@@ -8,27 +8,64 @@ from bashtool import BashTool
 
 load_dotenv()
 llm = ChatOllama(base_url="http://ollama:11434",
-                 model=os.getenv("OLLAMA_MODEL", "llama3"),
+                 model=os.getenv("OLLAMA_MODEL", "mixtral"),
                  temperature=0)
 
 prompt_prefix = """
-You are a ReAct agent. Never return JSON. Use the exact
-ReAct format described below.
+You are a penetration testing agent with permission to perform non-destructive security testing.
+You have access to these tools ONLY: nmap, ping, curl.
 
-You have written permission to enumerate open ports and banners
-on the host below. Use only: nmap, ping, curl.
+You MUST follow these steps in EXACT order:
+1. FIRST STEP: Use ping to resolve the target hostname to IP
+   - Command: ping -c 1 <target>
+   - Do not proceed until you have the IP address
 
-Respond **exactly** in ReAct style, e.g.
+2. SECOND STEP: After getting the IP, use nmap to scan for open ports
+   - Command: nmap -sV <target>
+   - Do not proceed until you have port scan results
 
-Question: <text>
+3. FINAL STEP: Use curl to check any web services found
+   - Command: curl -I http://<target>
+   - Only proceed to this step after port scan
+
+4. SECURITY SUGGESTIONS: Based on the findings, suggest next steps for security testing
+   - Focus on the services and versions found
+   - Suggest specific security checks
+   - Keep suggestions brief and relevant
+
+Important rules:
+- You MUST start with ping, no exceptions
+- Each command must be non-interactive (use appropriate flags)
+- Use verbose flags when needed (e.g., curl -v, nmap -v)
+- Do not skip any steps
+- Do not combine steps
+
+Return results in ReAct format:
+Question: <current task>
 Thought: <your reasoning>
 Action: Terminal
-Action Input: nmap -sV bwapp
+Action Input: <exact command>
 Observation: <command output>
-Thought: ...
-Final Answer: <bullet-list of findings>
+Thought: <next step or conclusion>
 
-Do **not** use JSON, markdown or code fences.
+Example sequence:
+Question: What is the IP address of target?
+Thought: I will use ping to resolve the hostname
+Action: Terminal
+Action Input: ping -c 1 target
+Observation: <output>
+Thought: Now I will scan for open ports
+Action: Terminal
+Action Input: nmap -sV target
+Observation: <output>
+Thought: I found web services, let me check them
+Action: Terminal
+Action Input: curl -I http://target
+Observation: <output>
+Thought: Done
+Final Answer: • IP: <resolved IP>\n• Open ports: 80, 3306\n• Web server: Apache/2.4.7\n\nSuggested next steps for security testing:\n1. Check for common web vulnerabilities on port 80\n2. Test MySQL security on port 3306\n3. Look for outdated software versions
+
+Remember: You MUST start with ping and follow the steps in order!
 """
 
 # If any tool is not found, install it. If you can't install it, try another tool.
@@ -47,7 +84,7 @@ def run_scanner_agent(args):
     # 1) Large-language-model (local Ollama instance)
     llm = ChatOllama(
         base_url=os.getenv("OLLAMA_BASE_URL", "http://ollama:11434"),
-        model=os.getenv("OLLAMA_MODEL", "llama3"),
+        model=os.getenv("OLLAMA_MODEL", "mixtral"),
         temperature=0,
     )
 
@@ -59,20 +96,60 @@ def run_scanner_agent(args):
 
     # 4) Prompt-header (common rules)
     prompt_prefix = """
-You have written permission for *non-destructive* port and banner scanning of the target below.
-Only use these commands: **nmap, ping, curl**.
+You are a penetration testing agent with permission to perform non-destructive security testing.
+You have access to these tools ONLY: nmap, ping, curl.
+
+You MUST follow these steps in EXACT order:
+1. FIRST STEP: Use ping to resolve the target hostname to IP
+   - Command: ping -c 1 <target>
+   - Do not proceed until you have the IP address
+
+2. SECOND STEP: After getting the IP, use nmap to scan for open ports
+   - Command: nmap -sV <target>
+   - Do not proceed until you have port scan results
+
+3. FINAL STEP: Use curl to check any web services found
+   - Command: curl -I http://<target>
+   - Only proceed to this step after port scan
+
+4. SECURITY SUGGESTIONS: Based on the findings, suggest next steps for security testing
+   - Focus on the services and versions found
+   - Suggest specific security checks
+   - Keep suggestions brief and relevant
+
+Important rules:
+- You MUST start with ping, no exceptions
+- Each command must be non-interactive (use appropriate flags)
+- Use verbose flags when needed (e.g., curl -v, nmap -v)
+- Do not skip any steps
+- Do not combine steps
 
 Return results in ReAct format:
-
-Question: …
-Thought: …
+Question: <current task>
+Thought: <your reasoning>
 Action: Terminal
-Action Input: <one-line command>
-Observation: …
+Action Input: <exact command>
+Observation: <command output>
+Thought: <next step or conclusion>
 
-End with:
+Example sequence:
+Question: What is the IP address of target?
+Thought: I will use ping to resolve the hostname
+Action: Terminal
+Action Input: ping -c 1 target
+Observation: <output>
+Thought: Now I will scan for open ports
+Action: Terminal
+Action Input: nmap -sV target
+Observation: <output>
+Thought: I found web services, let me check them
+Action: Terminal
+Action Input: curl -I http://target
+Observation: <output>
 Thought: Done
-Final Answer: • Point 1 …\n• Point 2 …
+Final Answer: • IP: <resolved IP>\n• Open ports: 80, 3306\n• Web server: Apache/2.4.7\n\nSuggested next steps for security testing:\n1. Check for common web vulnerabilities on port 80\n2. Test MySQL security on port 3306\n3. Look for outdated software versions
+
+Remember: You MUST start with ping and follow the steps in order!
 """
 
     # 5) Build the ReAct agent
@@ -88,7 +165,7 @@ Final Answer: • Point 1 …\n• Point 2 …
 
     # 6) Set the actual question (ReAct template expects key "input")
     target = f"{args.ip}:{args.port}" if args.port else args.ip
-    question = f"Target hostname: {target}"
+    question = f"Perform a complete security scan of target: {target}. You MUST start with ping to resolve the hostname, then scan for open ports, and finally check web services. After the scan, suggest relevant security testing steps based on the findings."
     print(question)
 
     # 7) Run – use .invoke so the input field is named "input"
