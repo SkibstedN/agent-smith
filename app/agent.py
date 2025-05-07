@@ -1,4 +1,6 @@
-import json, logging, os, re
+import logging
+import os
+import re
 from typing import List, Union
 
 from dotenv import load_dotenv
@@ -8,9 +10,9 @@ from langchain.memory import ConversationBufferMemory
 from langchain.prompts import StringPromptTemplate
 from langchain.schema import AgentAction, AgentFinish
 
-from bashtool import BashTool   # ← indeholder kun nmap / curl / ping
+from bashtool import BashTool
 
-# ---------- logning ----------
+# ---------- logging ----------
 logging.basicConfig(
     filename=os.getenv("AGENT_LOG", "agent-smith.log"),
     level=logging.INFO,
@@ -46,7 +48,7 @@ Question: {input}
 {agent_scratchpad}
 """
 
-# ------------- prompt helper (samme som før – uændret) -------------
+# ------------- prompt helper (same as before – unchanged) -------------
 class CustomPromptTemplate(StringPromptTemplate):
     template: str
     tools: List[Tool]
@@ -77,7 +79,7 @@ class CustomOutputParser(AgentOutputParser):
                            tool_input=match.group(2).strip().strip('"'),
                            log=llm_output)
 
-# ---------- selve agent-runneren ----------
+# ---------- the actual agent runner ----------
 def run_general_agent(args, mem=None):
     load_dotenv()
     llm = ChatOllama(
@@ -104,7 +106,7 @@ def run_general_agent(args, mem=None):
         f"Stop when you have a bullet-point list of findings."
     )
     logging.info("Prompt sent: %s", prompt)
-    agent_executor.invoke(prompt)          # invoke() = moderne run()
+    agent_executor.invoke(prompt)          # invoke() = modern run()
 
     with open("memory.txt", "w") as f:
         f.write(memory.json())

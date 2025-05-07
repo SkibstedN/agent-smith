@@ -9,7 +9,7 @@ class BashTool(BaseTool):
     name: str = "Terminal"
     description: str = "Kører nmap / ping / curl i et sandkasse-miljø og returnerer rå terminal-output."
 
-    def _run(self, command: str) -> str:          # sync-kald (ReAct bruger denne)
+    def _run(self, command: str) -> str:          # sync-call (ReAct uses this)
         parts = shlex.split(command)
 
         if not parts or parts[0] not in ALLOWED:
@@ -27,5 +27,5 @@ class BashTool(BaseTool):
         except subprocess.TimeoutExpired:
             return f"Timeout after {TIMEOUT}s"
 
-    async def _arun(self, command: str):          # async-variant ikke implementeret
+    async def _arun(self, command: str):          # async-variant not implemented
         raise NotImplementedError("BashTool does not support async execution.")
