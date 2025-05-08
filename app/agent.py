@@ -5,7 +5,7 @@ from typing import List, Union
 
 from dotenv import load_dotenv
 from langchain.agents import AgentOutputParser, initialize_agent, AgentType, Tool
-from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import StringPromptTemplate
 from langchain.schema import AgentAction, AgentFinish
@@ -82,10 +82,10 @@ class CustomOutputParser(AgentOutputParser):
 # ---------- the actual agent runner ----------
 def run_general_agent(args, mem=None):
     load_dotenv()
-    llm = ChatOllama(
-        base_url=os.getenv("OLLAMA_BASE_URL", "http://ollama:11434"),
-        model=os.getenv("OLLAMA_MODEL", "llama3"),
+    llm = ChatOpenAI(
+        model="gpt-4.1",
         temperature=0,
+        api_key=os.getenv("OPENAI_API_KEY")
     )
 
     tools = [BashTool()]
