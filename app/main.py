@@ -27,7 +27,8 @@ def main():
     args = parser.parse_args()
 
     if args.goal == "scan":
-        run_scanner_agent(args)
+        result = run_scanner_agent(args)
+        print(result)
     else:
         run_general_agent(args)
 

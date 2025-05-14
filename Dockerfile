@@ -9,6 +9,5 @@ WORKDIR /app
 COPY . /app
 RUN pip install --no-cache-dir -r requirements.txt
 
-ENV AGENT_LOG=/logs/agent-smith.log \
-    OLLAMA_MODEL=mixtral
+ENV AGENT_LOG=/logs/agent-smith.log
 CMD ["python", "app/main.py"]
